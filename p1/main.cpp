@@ -1,9 +1,11 @@
-#include<iostream>
+#include <iostream>
 #include <fstream>
 #include <vector>
 #include <cstdlib>
 #include <string>
 #include <sstream>
+#include <stdlib.h>
+#include <stdio.h>
 using namespace std;
 
 int main(int arc, char *argv[])
@@ -69,6 +71,7 @@ int main(int arc, char *argv[])
     {
       if( i != j)
       {
+        //figure our the grid x and y that we're looking at
         int orow;
         if(j < row_size)
         {
@@ -79,7 +82,6 @@ int main(int arc, char *argv[])
           orow = j/row_size;
         }
         int ocol = j%row_size;
-        cout << "From  grid :" << orow << ocol << endl;
 
         int drow;
         if(i < row_size)
@@ -91,32 +93,26 @@ int main(int arc, char *argv[])
           drow = i/row_size;
         }
         int dcol = i%row_size;
-        cout << "To grid :" << drow << dcol << endl;
 
-        cout << "At Table Spot: " << i << " " << j << endl;
-        if(j > 0) //left
+        //Make sure the rooms are actually next to each other
+        if(((drow == orow) && (abs(dcol-ocol) <= 1)) || 
+             ((dcol == ocol) && (abs(drow - orow) <=1)))
         {
-          neighbors++;
+          cout << "Dest: " << drow << dcol << endl <<
+            "Orig: " << orow << ocol << endl;
         }
-        if(j < rooms-1) //right
-        {
-          neighbors++;
-        }
-        if(i > 0) //above
-        {
-          neighbors++;
-        }
-        if(i < rooms-1) //below
-        {
-          neighbors++;
-        }
-        cout << "Neighbors: " << neighbors << endl;
-        cout << "-----------------------------" << endl;
+
         neighbors = 0;
       }
     }
   }
 }
+
+
+
+
+
+
 
 
 
