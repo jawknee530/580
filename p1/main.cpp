@@ -106,44 +106,50 @@ int main(int arc, char *argv[])
         if(((drow == orow) && (abs(dcol-ocol) <= 1)) || 
              ((dcol == ocol) && (abs(drow - orow) <=1)))
         {
-          cout << "Dest: " << drow << dcol << endl <<
-            "Orig: " << orow << ocol << endl;
+          //cout << "Dest: " << drow << dcol << endl <<
+            //"Orig: " << orow << ocol << endl;
 
           if(dcol < ocol)      //coming from right
           {
-            T[i][j]++;
+            if(!(grid[orow][ocol] & 2 && grid[drow][dcol] & 1))
+              T[i][j]++;
           }
           else if(dcol > ocol) //coming from left
           {
-            T[i][j]++;
+            if(!(grid[orow][ocol] & 1 && grid[drow][dcol] & 2))
+              T[i][j]++;
           }
           else if(drow < orow) //coming from below
           {
-            T[i][j]++;
+            if(!(grid[orow][ocol] & 8 && grid[drow][dcol] & 4))
+              T[i][j]++;
           }
           else if(drow > orow) //coming from above
           {
-            T[i][j]++;
+            if(!(grid[orow][ocol] & 4 && grid[drow][dcol] & 8))
+              T[i][j]++;
           }
         }
-
         neighbors = 0;
       }
     }
   }
-  for(int i = 0; i < rooms; i++)
+  //double fors to figure out how many transitions per row
+  for(int j = 0; j < rooms; j++)
   {
     int rowTrans = 0;
-    for(int j = 0; j < rooms; j++)
+    for(int i = 0; i < rooms; i++)
     {
       if(T[i][j] == 1)
       {
         rowTrans++;
       }
     }
-    for(int j = 0; j < rooms; j++)
+    //changes the transitions from 1 to their actual number
+    for(int i = 0; i < rooms; i++)
     {
-      T[i][j] = T[i][j]/rowTrans;
+      if(rowTrans > 0)
+        T[i][j] = T[i][j]/rowTrans;
     }
     rowTrans = 0;
   }
