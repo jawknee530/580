@@ -63,8 +63,16 @@ int main(int arc, char *argv[])
     " Rooms: " << rooms << endl;
 
   //T is the transition matrix
-  int T[rooms][rooms];
+  float T[rooms][rooms];
   int neighbors = 0;
+  for(int i = 0; i < rooms; i++)
+  {
+    for(int j = 0; j < rooms; j++)
+    {
+      T[i][j] = 0;
+    }
+  }
+  //i is to/destination j is from/origin
   for(int i = 0; i < rooms; i++)
   {
     for(int j = 0; j < rooms; j++)
@@ -100,11 +108,52 @@ int main(int arc, char *argv[])
         {
           cout << "Dest: " << drow << dcol << endl <<
             "Orig: " << orow << ocol << endl;
+
+          if(dcol < ocol)      //coming from right
+          {
+            T[i][j]++;
+          }
+          else if(dcol > ocol) //coming from left
+          {
+            T[i][j]++;
+          }
+          else if(drow < orow) //coming from below
+          {
+            T[i][j]++;
+          }
+          else if(drow > orow) //coming from above
+          {
+            T[i][j]++;
+          }
         }
 
         neighbors = 0;
       }
     }
+  }
+  for(int i = 0; i < rooms; i++)
+  {
+    int rowTrans = 0;
+    for(int j = 0; j < rooms; j++)
+    {
+      if(T[i][j] == 1)
+      {
+        rowTrans++;
+      }
+    }
+    for(int j = 0; j < rooms; j++)
+    {
+      T[i][j] = T[i][j]/rowTrans;
+    }
+    rowTrans = 0;
+  }
+  for(int i = 0; i < rooms; i++)
+  {
+    for(int j = 0; j < rooms; j++)
+    {
+      cout << T[i][j] << ' ';
+    }
+    cout << endl;
   }
 }
 
