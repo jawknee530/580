@@ -9,6 +9,8 @@
 #include <math.h>
 using namespace std;
 
+int getObvs(string x);
+
 int main(int argc, char *argv[])
 {
   //get the error number
@@ -25,6 +27,19 @@ int main(int argc, char *argv[])
   {
     cout << D[i] << endl;
   }
+
+  //set up the observations
+  double obvs[argc-3];
+  for(int i = 3; i < argc; i++)
+  {
+    obvs[i-3] = getObvs(argv[i]); 
+  }
+  //print the obvs array
+  for(int i =3; i < argc; i++)
+  {
+    cout << obvs[i-3] << ' ';
+  }
+  cout << endl;
 
   //all this stuff to fill in the 2d vector of rooms
   vector< vector<int> > grid;
@@ -176,6 +191,35 @@ int main(int argc, char *argv[])
     cout << endl;
   }
 }
+
+int getObvs(string x)
+{
+  size_t foundN = x.find('N');
+  size_t foundS = x.find('S');
+  size_t foundW = x.find('W');
+  size_t foundE = x.find('E');
+
+  int range = 0;
+
+  if(foundN != string::npos)
+  {
+    range = range + 8;
+  }
+  if(foundS != string::npos)
+  {
+    range = range + 4;
+  }
+  if(foundW != string::npos)
+  {
+    range = range + 2;
+  }
+  if(foundE != string::npos)
+  {
+    range = range + 1;
+  }
+  return range;
+}
+
 
 
 
