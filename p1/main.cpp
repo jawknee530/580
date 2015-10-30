@@ -6,12 +6,25 @@
 #include <sstream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 using namespace std;
 
-int main(int arc, char *argv[])
+int main(int argc, char *argv[])
 {
   //get the error number
-  int error = atoi(argv[2]);
+  double error = stof(argv[2]);
+
+  // set up the Difference table
+  double D[5];
+  for(int i = 0; i < 5; i++)
+  {
+    D[i] = pow(error, i) * pow((1-error), (4-i));
+  }
+  //print D table
+  for(int i = 0; i < 5; i++)
+  {
+    cout << D[i] << endl;
+  }
 
   //all this stuff to fill in the 2d vector of rooms
   vector< vector<int> > grid;
@@ -153,6 +166,7 @@ int main(int arc, char *argv[])
     }
     rowTrans = 0;
   }
+  //prints the T table
   for(int i = 0; i < rooms; i++)
   {
     for(int j = 0; j < rooms; j++)
