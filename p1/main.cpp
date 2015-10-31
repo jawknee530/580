@@ -7,9 +7,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <bitset>
 using namespace std;
 
 int getObvs(string x);
+float getProb(float x, float y);
 
 int main(int argc, char *argv[])
 {
@@ -249,6 +251,113 @@ int main(int argc, char *argv[])
     cout << Z[i] << ' ';
   }
   cout << endl;
+
+  //set J = Z
+  for(int i = 0; i < rooms; i++)
+  {
+    J[i] = Z[i];
+  }
+
+  //set up O for the for loop
+  float O[rooms][rooms];
+  //initialize Y
+  float Y[rooms];
+  for(int i = 0; i < rooms; i++)
+  {
+    Y[i] = 0;
+  }
+  //initialize E
+  float E[rooms];
+  for(int i = 0; i < rooms; i++)
+  {
+    E[i] = 0;
+  }
+  for(int i = 0; i < (argc-3); i++)
+  {
+    //initialize O
+    for(int j = 0; j < rooms; j++)
+    {
+      int differences = getProb(obvs[i], grid[j/row_size][j%row_size]);
+      O[j][j] = D[differences];
+    }
+    //print O for testing
+    for(int j = 0; j < rooms; j++)
+    {
+      cout << O[j][j] << endl;
+    }
+    //Y = O * J
+    for(int i = 0; i < rooms; i++)
+    {
+      Y[i] = O[i][i] * J[i];
+    }
+    //print Y for testing
+    for(int i = 0; i < rooms; i++)
+    {
+      cout << Y[i] << ' ';
+    }
+    cout << endl;
+    //Sum Y
+    double sumY = 0;
+    for(int i = 0; i < rooms; i++)
+    {
+      sumY = sumY + Y[i];
+    }
+    cout << sumY << endl;
+    //get E
+    for(int i = 0; i < rooms; i++)
+    {
+      E[i] = Y[i]/sumY;
+      cout << "E: " << E[i] << endl;
+    }
+    //clear out J
+    for(int i = 0; i < rooms; i++)
+    {
+      J[i] = 0;
+    }
+    //J = T * Y
+    for(int i = 0; i < rooms; i++)
+    {
+      for(int j = 0; j < rooms; j++)
+      {
+        J[i] = J[i] + T[i][j] * Y[j];
+      }
+    }
+    //print J for testing
+    for(int i = 0; i < rooms; i++)
+    {
+      cout << J[i] << ' ';
+    }
+    cout << endl;
+  }
+
+  //now figure out which rooms
+  double best = 0;
+  for(int i = 0; i < rooms; i++)
+  {
+    if(E[i] > best)
+    {
+      best = E[i];
+    }
+  }
+
+}
+
+//for getting probability for O matrix
+float getProb(float obvs, float room)
+{
+  int differences = 0;
+  //use bitset to compare the bit fields
+  bitset<4> foo = obvs;
+  bitset<4> bar = room;
+  for(int i = 0; i < 4; i++)
+  {
+    if(foo[i] != bar[i])
+    {
+      differences = differences + 1;
+      //cout << foo << ' ' << bar << ' ' << differences << endl;
+    }
+  }
+  return differences;
 }
 
 //for getting the observation numbers
