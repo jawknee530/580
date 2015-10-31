@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
   {
     cout << D[i] << endl;
   }
+  cout << endl;
 
   //set up the observations
   double obvs[argc-3];
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
   {
     cout << obvs[i-3] << ' ';
   }
-  cout << endl;
+  cout << endl << endl;
 
   //all this stuff to fill in the 2d vector of rooms
   vector< vector<int> > grid;
@@ -77,6 +78,44 @@ int main(int argc, char *argv[])
       grid.push_back(newRow);
     }
   }
+
+  //Create J
+  float J[rooms];
+  int usableRooms = 0;
+  //see how many rooms are usable
+  for(vector<vector<int>>::size_type i = 0; i < grid.size(); i++)
+  {
+    for(vector<int>::size_type j = 0; j < grid[i].size(); j++)
+    {
+      if(grid[i][j] != 15)
+      {
+        usableRooms = usableRooms+1;
+      }
+    }
+  }
+  //assign 1 to each of the rooms taht are usable
+  for(int i = 0; i < rooms; i++)
+  {
+    if(grid[i/row_size][i%row_size] != 15)
+    {
+      J[i] = 1;
+    }
+    else
+    {
+      J[i] = 0;
+    }
+  }
+  //set J table to proper number after setting to 1 or 0
+  for(int i = 0; i < rooms; i++)
+  {
+    J[i] = J[i]/usableRooms;
+  }
+  //printing the J table
+  for (int i = 0; i < rooms; i++)
+  {
+    cout << J[i] << ' ';
+  }
+  cout << endl;
 
   //just printing out the rooms for testing here
   for(vector<vector<int>>::size_type i = 0; i < grid.size(); i++)
@@ -190,8 +229,29 @@ int main(int argc, char *argv[])
     }
     cout << endl;
   }
+  cout << endl;
+
+  //do P(X1) before the for loop
+  double Z[rooms];
+  for(int i = 0; i < rooms; i++)
+  {
+    Z[i] = 0;
+  }
+  for(int i = 0; i < rooms; i++)
+  {
+    for(int j = 0; j < rooms; j++)
+    {
+      Z[i] = Z[i] + T[i][j] * J[j];
+    }
+  }
+  for(int i = 0; i < rooms; i++)
+  {
+    cout << Z[i] << ' ';
+  }
+  cout << endl;
 }
 
+//for getting the observation numbers
 int getObvs(string x)
 {
   size_t foundN = x.find('N');
